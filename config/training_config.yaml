@@ -1,0 +1,27 @@
+model:
+  base_model: "meta-llama/Meta-Llama-3.1-8B-Instruct"
+  new_model_name: "cloud-architect-v1"
+  quantization: "nf4"
+
+lora:
+  r: 32
+  alpha: 64
+  dropout: 0.05
+  target_modules: "all-linear"
+
+training:
+  seed: 42
+  epochs: 3
+  batch_size: 4
+  grad_accum_steps: 4
+  learning_rate: 2.0e-4
+  warmup_ratio: 0.03
+  max_seq_length: 2048
+  logging_steps: 10
+  eval_steps: 100
+  save_steps: 500
+  output_dir: "./results"
+
+system:
+  use_wandb: true
+  log_level: "INFO"

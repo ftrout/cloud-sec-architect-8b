@@ -1,0 +1,201 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cloud-sec-architect-ai"
+version = "0.1.0"
+description = "Fine-tuned LLM for Cloud Security Architecture - specialized training pipeline for creating a Senior Cloud Security Architect AI model"
+authors = [{name = "Frank Trout"}]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.10,<3.12"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Security",
+]
+
+dependencies = [
+    "torch==2.2.0",
+    "transformers==4.40.0",
+    "peft==0.10.0",
+    "trl==0.8.0",
+    "bitsandbytes==0.43.0",
+    "accelerate==0.28.0",
+    "datasets>=2.17.0",
+    "trafilatura==1.8.0",
+    "datasketch==1.6.4",
+    "textstat==0.7.3",
+    "scipy==1.12.0",
+    "wandb==0.16.4",
+    "mlflow==2.11.1",
+    "pyyaml==6.0.1",
+    "python-dotenv==1.0.1",
+    "pydantic>=2.0.0",
+    "requests>=2.31.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-cov>=4.0.0",
+    "pytest-mock>=3.11.0",
+    "ruff>=0.3.0",
+    "mypy>=1.8.0",
+    "black>=23.0.0",
+    "isort>=5.13.0",
+    "pre-commit>=3.5.0",
+    "ipython>=8.20.0",
+    "types-PyYAML>=6.0.0",
+    "types-requests>=2.31.0",
+]
+eval = [
+    "rouge-score==0.1.2",
+    "bert-score==0.3.13",
+]
+all = [
+    "cloud-sec-architect-ai[dev,eval]"
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]
+
+[tool.setuptools.package-data]
+"*" = ["config/*.yaml"]
+
+# Black configuration
+[tool.black]
+line-length = 100
+target-version = ['py310']
+exclude = '''
+/(
+    \.git
+  | \.venv
+  | venv
+  | build
+  | dist
+  | \.eggs
+  | \.mypy_cache
+  | \.pytest_cache
+  | \.ruff_cache
+)/
+'''
+
+# isort configuration
+[tool.isort]
+profile = "black"
+line_length = 100
+skip_gitignore = true
+known_first_party = ["src"]
+
+# Ruff configuration
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "UP",  # pyupgrade
+    "N",   # pep8-naming
+    "SIM", # flake8-simplify
+    "RUF", # ruff-specific rules
+]
+ignore = [
+    "E501",  # line too long (handled by black)
+    "B008",  # do not perform function calls in argument defaults
+    "B905",  # zip() without an explicit strict= parameter
+]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]  # Allow unused imports in __init__.py
+"tests/**/*.py" = ["S101"]  # Allow assert in tests
+
+# mypy configuration
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false  # Start lenient, increase strictness over time
+disallow_incomplete_defs = false
+check_untyped_defs = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+strict_equality = true
+
+[[tool.mypy.overrides]]
+module = [
+    "trafilatura.*",
+    "datasketch.*",
+    "textstat.*",
+    "transformers.*",
+    "peft.*",
+    "trl.*",
+    "bitsandbytes.*",
+    "accelerate.*",
+    "wandb.*",
+    "mlflow.*",
+]
+ignore_missing_imports = true
+
+# pytest configuration
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+addopts = [
+    "--verbose",
+    "--strict-markers",
+    "--tb=short",
+    "--cov=.",
+    "--cov-report=html",
+    "--cov-report=term-missing:skip-covered",
+    "--cov-report=xml",
+]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks tests as integration tests",
+    "unit: marks tests as unit tests",
+]
+
+[tool.coverage.run]
+source = ["."]
+omit = [
+    "*/tests/*",
+    "*/test_*.py",
+    "*/__pycache__/*",
+    "*/venv/*",
+    "*/env/*",
+    ".venv/*",
+    "setup.py",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+    "@abstractmethod",
+]
+
+# Bandit security scanning configuration
+[tool.bandit]
+exclude_dirs = ["tests", "venv", ".venv", "build", "dist"]
+skips = ["B101"]  # Skip assert_used in tests

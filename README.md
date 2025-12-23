@@ -64,24 +64,24 @@ huggingface-cli login
 
 ## 🔄 The Pipeline
 
-### Step 1: The Data Engine (`1_architect_harvester.py`)
+### Step 1: The Data Engine (`harvest_data.py`)
 
 This script acts as the "Brain" of the operation. It crawls a curated list of professional documentation roots (AWS Prescriptive Guidance, Azure Well-Architected, NIST, etc.), extracts the main content, checks strictly for technical depth (Grade Level > 8), and removes semantic duplicates.
 
 ```bash
-python 1_architect_harvester.py
+python harvest_data.py
 ```
 
-* **Inputs:** Curated list of 15+ high-value domains (AWS, Azure, K8s, CIS, MITRE, HashiCorp).
+* **Inputs:** Curated list of high-value domains (AWS, Azure, K8s, CIS, MITRE).
 * **Process:** Fetch -> Extract Main Text -> Quality Filter -> Deduplicate -> Chunk.
-* **Output:** `./data_architect/architect_training_data.jsonl`
+* **Output:** `./data/architect_training_data.jsonl`
 
-### Step 2: The Training Lab (`2_train_architect.py`)
+### Step 2: The Training Lab (`train.py`)
 
 Fine-tunes **Llama 3.1 8B** using **QLoRA** (Quantized Low-Rank Adaptation). This script injects a "Senior Architect" persona into the system prompt and trains the model to answer user queries with precise, compliant technical guidance.
 
 ```bash
-python 2_train_architect.py
+python train.py
 ```
 
 * **Base Model:** `meta-llama/Meta-Llama-3.1-8B-Instruct`.
@@ -89,12 +89,12 @@ python 2_train_architect.py
 * **Output:** `./cloud-architect-v1` (The trained adapter weights).
 * **Training Time:** ~2-4 hours on a single RTX 3090.
 
-### Step 3: The Judge (`3_evaluate_architect.py`)
+### Step 3: The Judge (`evaluate.py`)
 
 Validates the model against a "Golden Set" of complex architectural questions. This ensures the model isn't just reciting facts but can reason through design trade-offs (e.g., "OIDC vs. SAML", "Private Link vs. Service Endpoints").
 
 ```bash
-python 3_evaluate_architect.py
+python evaluate.py
 ```
 
 ---
@@ -103,15 +103,19 @@ python 3_evaluate_architect.py
 
 ```text
 Cloud-Sec-Architect-AI/
-├── data_architect/             # Generated datasets
+├── config/                     # Configuration files
+│   └── training_config.yaml
+├── data/                       # Generated datasets
 │   └── architect_training_data.jsonl
 ├── cloud-architect-v1/         # Saved LoRA Adapters
 │   ├── adapter_config.json
 │   └── adapter_model.safetensors
-├── results_architect/          # Training checkpoints
-├── 1_architect_harvester.py    # Data Engine (Scraping & Cleaning)
-├── 2_train_architect.py        # Training Script (Llama 3.1 + QLoRA)
-├── 3_evaluate_architect.py     # Evaluation Script (Golden Set)
+├── results/                    # Training checkpoints
+├── tests/                      # Unit tests
+│   └── test_harvester.py
+├── harvest_data.py             # Data Engine (Scraping & Cleaning)
+├── train.py                    # Training Script (Llama 3.1 + QLoRA)
+├── evaluate.py                 # Evaluation Script (Golden Set)
 ├── requirements.txt            # Python dependencies
 └── README.md                   # Documentation
 ```

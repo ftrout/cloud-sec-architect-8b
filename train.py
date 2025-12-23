@@ -1,22 +1,21 @@
 import torch
-import yaml
 import os
 import random
 import numpy as np
 from typing import Dict, List
 from datasets import load_dataset
 from transformers import (
-    AutoModelForCausalLM, 
-    AutoTokenizer, 
+    AutoModelForCausalLM,
+    AutoTokenizer,
     BitsAndBytesConfig,
     TrainingArguments
 )
 from peft import LoraConfig, prepare_model_for_kbit_training, get_peft_model
 from trl import SFTTrainer, SFTConfig
+from config_validation import load_config
 
-# Load Configuration
-with open("config/training_config.yaml", "r") as f:
-    config = yaml.safe_load(f)
+# Load and validate configuration
+config = load_config("config/training_config.yaml")
 
 def set_seed(seed: int):
     random.seed(seed)
@@ -44,65 +43,65 @@ def formatting_prompts_func(batch: Dict[str, List[str]]) -> List[str]:
     return output_texts
 
 def train():
-    set_seed(config['training']['seed'])
-    
+    set_seed(config.training.seed)
+
     # 1. Load Data
     data_file = "./data/architect_training_data.jsonl"
     dataset = load_dataset("json", data_files=data_file, split="train")
-    dataset = dataset.train_test_split(test_size=0.1, seed=config['training']['seed'])
+    dataset = dataset.train_test_split(test_size=0.1, seed=config.training.seed)
 
     # 2. Quantization
     bnb_config = BitsAndBytesConfig(
         load_in_4bit=True,
-        bnb_4bit_quant_type=config['model']['quantization'],
+        bnb_4bit_quant_type=config.model.quantization,
         bnb_4bit_compute_dtype=torch.bfloat16,
     )
 
     # 3. Model
     model = AutoModelForCausalLM.from_pretrained(
-        config['model']['base_model'],
+        config.model.base_model,
         quantization_config=bnb_config,
         device_map="auto",
         attn_implementation="flash_attention_2"
     )
-    
+
     # Enable Gradient Checkpointing for memory efficiency
     model.gradient_checkpointing_enable()
     model = prepare_model_for_kbit_training(model)
 
-    tokenizer = AutoTokenizer.from_pretrained(config['model']['base_model'])
+    tokenizer = AutoTokenizer.from_pretrained(config.model.base_model)
     tokenizer.pad_token = tokenizer.eos_token
     tokenizer.padding_side = "right"
 
     # 4. LoRA
     peft_config = LoraConfig(
-        r=config['lora']['r'],
-        lora_alpha=config['lora']['alpha'],
-        lora_dropout=config['lora']['dropout'],
+        r=config.lora.r,
+        lora_alpha=config.lora.alpha,
+        lora_dropout=config.lora.dropout,
         bias="none",
         task_type="CAUSAL_LM",
-        target_modules=config['lora']['target_modules']
+        target_modules=config.lora.target_modules
     )
     model = get_peft_model(model, peft_config)
 
     # 5. Training Arguments
     args = SFTConfig(
-        output_dir=config['training']['output_dir'],
-        num_train_epochs=config['training']['epochs'],
-        per_device_train_batch_size=config['training']['batch_size'],
-        gradient_accumulation_steps=config['training']['grad_accum_steps'],
-        learning_rate=config['training']['learning_rate'],
-        warmup_ratio=config['training']['warmup_ratio'],
+        output_dir=config.training.output_dir,
+        num_train_epochs=config.training.epochs,
+        per_device_train_batch_size=config.training.batch_size,
+        gradient_accumulation_steps=config.training.grad_accum_steps,
+        learning_rate=config.training.learning_rate,
+        warmup_ratio=config.training.warmup_ratio,
         fp16=False,
         bf16=True,
-        logging_steps=config['training']['logging_steps'],
+        logging_steps=config.training.logging_steps,
         evaluation_strategy="steps",
-        eval_steps=config['training']['eval_steps'],
+        eval_steps=config.training.eval_steps,
         save_strategy="steps",
-        save_steps=config['training']['save_steps'],
+        save_steps=config.training.save_steps,
         load_best_model_at_end=True,
-        report_to="wandb" if config['system']['use_wandb'] else "none",
-        max_seq_length=config['training']['max_seq_length'],
+        report_to="wandb" if config.system.use_wandb else "none",
+        max_seq_length=config.training.max_seq_length,
         packing=True,
     )
 
@@ -117,9 +116,9 @@ def train():
 
     print("Starting Professional Training Pipeline...")
     trainer.train()
-    
-    trainer.model.save_pretrained(config['model']['new_model_name'])
-    tokenizer.save_pretrained(config['model']['new_model_name'])
+
+    trainer.model.save_pretrained(config.model.new_model_name)
+    tokenizer.save_pretrained(config.model.new_model_name)
 
 if __name__ == "__main__":
     train()

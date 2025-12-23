@@ -1,9 +1,13 @@
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from peft import PeftModel
+from config_validation import load_config
 
-BASE_MODEL = "meta-llama/Meta-Llama-3.1-8B-Instruct"
-ADAPTER_PATH = "cloud-architect-v1"
+# Load and validate configuration
+config = load_config("config/training_config.yaml")
+
+BASE_MODEL = config.model.base_model
+ADAPTER_PATH = config.model.new_model_name
 
 # The "Golden Set" - Questions that separate Junior Admins from Senior Architects
 TEST_QUESTIONS = [

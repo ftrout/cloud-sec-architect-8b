@@ -184,10 +184,11 @@ class DataHarvester:
                             buffer = chunk
 
                     # Link Discovery
-                    for link in re.findall(r'href=[\'"]?([^\'" >]+)', downloaded):
-                        full_link = urljoin(url, link)
-                        if urlparse(full_link).netloc in ALLOWED_DOMAINS and full_link not in self.visited:
-                            self.queue.append(full_link)
+                    if isinstance(downloaded, str):
+                        for link in re.findall(r'href=[\'"]?([^\'" >]+)', downloaded):
+                            full_link = urljoin(url, link)
+                            if urlparse(full_link).netloc in ALLOWED_DOMAINS and full_link not in self.visited:
+                                self.queue.append(full_link)
 
                     # Periodically save checkpoint
                     if self.collected_count % 50 == 0:

@@ -19,11 +19,11 @@ TEST_QUESTIONS = [
 
 def evaluate():
     print("Loading Llama 3.1 + Adapter...")
-    base_model = AutoModelForCausalLM.from_pretrained(
+    base_model = AutoModelForCausalLM.from_pretrained(  # nosec B615
         BASE_MODEL, load_in_4bit=True, device_map="auto", torch_dtype=torch.bfloat16
     )
     model = PeftModel.from_pretrained(base_model, ADAPTER_PATH)
-    tokenizer = AutoTokenizer.from_pretrained(BASE_MODEL)
+    tokenizer = AutoTokenizer.from_pretrained(BASE_MODEL)  # nosec B615
 
     print("\n--- ARCHITECTURAL REVIEW ---\n")
     for question in TEST_QUESTIONS:

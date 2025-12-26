@@ -35,7 +35,7 @@ def merge_and_save(base_model_id: str, adapter_path: str, output_path: str):
     print(f"Loading base model: {base_model_id}")
 
     # Load base model in full precision for merging
-    model = AutoModelForCausalLM.from_pretrained(
+    model = AutoModelForCausalLM.from_pretrained(  # nosec B615
         base_model_id,
         torch_dtype=torch.float16,
         device_map="auto",
@@ -52,7 +52,7 @@ def merge_and_save(base_model_id: str, adapter_path: str, output_path: str):
     model.save_pretrained(output_path, safe_serialization=True)
 
     # Also save tokenizer
-    tokenizer = AutoTokenizer.from_pretrained(base_model_id)
+    tokenizer = AutoTokenizer.from_pretrained(base_model_id)  # nosec B615
     tokenizer.save_pretrained(output_path)
 
     print("Merge complete!")

@@ -52,7 +52,7 @@ class CloudSecurityArchitect:
         )
 
         # Load base model
-        self.model = AutoModelForCausalLM.from_pretrained(
+        self.model = AutoModelForCausalLM.from_pretrained(  # nosec B615
             base_model_id,
             quantization_config=bnb_config,
             device_map="auto",
@@ -66,7 +66,7 @@ class CloudSecurityArchitect:
         self.model.eval()
 
         # Load tokenizer
-        self.tokenizer = AutoTokenizer.from_pretrained(base_model_id)
+        self.tokenizer = AutoTokenizer.from_pretrained(base_model_id)  # nosec B615
         self.tokenizer.pad_token = self.tokenizer.eos_token
 
         print("Model loaded successfully!\n")

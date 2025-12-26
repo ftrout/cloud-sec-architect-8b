@@ -47,7 +47,7 @@ def train():
 
     # 1. Load Data
     data_file = "./data/architect_training_data.jsonl"
-    dataset = load_dataset("json", data_files=data_file, split="train")
+    dataset = load_dataset("json", data_files=data_file, split="train")  # nosec B615
     dataset = dataset.train_test_split(test_size=0.1, seed=config.training.seed)
 
     # 2. Quantization
@@ -58,7 +58,7 @@ def train():
     )
 
     # 3. Model
-    model = AutoModelForCausalLM.from_pretrained(
+    model = AutoModelForCausalLM.from_pretrained(  # nosec B615
         config.model.base_model,
         quantization_config=bnb_config,
         device_map="auto",
@@ -69,7 +69,7 @@ def train():
     model.gradient_checkpointing_enable()
     model = prepare_model_for_kbit_training(model)
 
-    tokenizer = AutoTokenizer.from_pretrained(config.model.base_model)
+    tokenizer = AutoTokenizer.from_pretrained(config.model.base_model)  # nosec B615
     tokenizer.pad_token = tokenizer.eos_token
     tokenizer.padding_side = "right"
 

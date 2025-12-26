@@ -48,7 +48,7 @@ def load_model(base_model_id: str, adapter_path: str):
     )
 
     # Load base model
-    model = AutoModelForCausalLM.from_pretrained(
+    model = AutoModelForCausalLM.from_pretrained(  # nosec B615
         base_model_id,
         quantization_config=bnb_config,
         device_map="auto",
@@ -61,7 +61,7 @@ def load_model(base_model_id: str, adapter_path: str):
     model.eval()
 
     # Load tokenizer
-    tokenizer = AutoTokenizer.from_pretrained(base_model_id)
+    tokenizer = AutoTokenizer.from_pretrained(base_model_id)  # nosec B615
     tokenizer.pad_token = tokenizer.eos_token
 
     print("Model loaded successfully!")

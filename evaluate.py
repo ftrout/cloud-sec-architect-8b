@@ -15,8 +15,9 @@ TEST_QUESTIONS = [
     "Design a multi-region disaster recovery strategy for a financial app on AWS using Route 53 and Aurora Global Database.",
     "Explain the security implications of enabling 'privileged' mode in a Kubernetes container.",
     "Compare the use of Azure Service Endpoints vs. Private Link for securing SQL Database access.",
-    "How does OIDC federation differ from SAML 2.0 when integrating Okta with AWS IAM?"
+    "How does OIDC federation differ from SAML 2.0 when integrating Okta with AWS IAM?",
 ]
+
 
 def evaluate():
     print("Loading Llama 3.1 + Adapter...")
@@ -31,7 +32,7 @@ def evaluate():
         # Construct Prompt (Llama 3 Format)
         messages = [
             {"role": "system", "content": "You are a Senior Cloud Security Architect."},
-            {"role": "user", "content": question}
+            {"role": "user", "content": question},
         ]
 
         prompt = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
@@ -40,11 +41,14 @@ def evaluate():
         with torch.no_grad():
             outputs = model.generate(**inputs, max_new_tokens=512, temperature=0.7)
 
-        response = tokenizer.decode(outputs[0][inputs.input_ids.shape[1]:], skip_special_tokens=True)
+        response = tokenizer.decode(
+            outputs[0][inputs.input_ids.shape[1] :], skip_special_tokens=True
+        )
 
         print(f"Q: {question}")
         print(f"A: {response}\n")
         print("-" * 60)
+
 
 if __name__ == "__main__":
     evaluate()

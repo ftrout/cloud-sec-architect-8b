@@ -28,7 +28,7 @@ class TestModelConfig:
         config = ModelConfig(
             base_model="meta-llama/Meta-Llama-3.1-8B-Instruct",
             new_model_name="test-model",
-            quantization="nf4"
+            quantization="nf4",
         )
         assert config.base_model == "meta-llama/Meta-Llama-3.1-8B-Instruct"
         assert config.quantization == "nf4"
@@ -36,11 +36,7 @@ class TestModelConfig:
     def test_invalid_model_id_format(self):
         """Test that model ID without '/' is rejected"""
         with pytest.raises(ValidationError) as exc_info:
-            ModelConfig(
-                base_model="invalid-model-id",
-                new_model_name="test",
-                quantization="nf4"
-            )
+            ModelConfig(base_model="invalid-model-id", new_model_name="test", quantization="nf4")
         assert "base_model must be in format" in str(exc_info.value)
 
     def test_invalid_quantization_type(self):
@@ -49,7 +45,7 @@ class TestModelConfig:
             ModelConfig(
                 base_model="org/model",
                 new_model_name="test",
-                quantization="invalid"  # Only nf4 or fp4 allowed
+                quantization="invalid",  # Only nf4 or fp4 allowed
             )
 
 
@@ -101,7 +97,7 @@ class TestTrainingConfig:
             logging_steps=10,
             eval_steps=100,
             save_steps=500,
-            output_dir="./results"
+            output_dir="./results",
         )
         assert config.epochs == 3
         assert config.learning_rate == 2e-4
@@ -113,7 +109,7 @@ class TestTrainingConfig:
                 epochs=3,
                 batch_size=64,
                 grad_accum_steps=4,  # 64 * 4 = 256 > 128
-                learning_rate=2e-4
+                learning_rate=2e-4,
             )
         assert "should not exceed 128" in str(exc_info.value)
 
@@ -124,7 +120,7 @@ class TestTrainingConfig:
                 epochs=3,
                 batch_size=4,
                 grad_accum_steps=4,
-                learning_rate=1e-2  # Too high for fine-tuning
+                learning_rate=1e-2,  # Too high for fine-tuning
             )
         assert "very high" in str(exc_info.value).lower()
 
@@ -132,21 +128,14 @@ class TestTrainingConfig:
         """Test that very low learning rate is rejected"""
         with pytest.raises(ValidationError) as exc_info:
             TrainingConfig(
-                epochs=3,
-                batch_size=4,
-                grad_accum_steps=4,
-                learning_rate=1e-7  # Too low
+                epochs=3, batch_size=4, grad_accum_steps=4, learning_rate=1e-7  # Too low
             )
         assert "very low" in str(exc_info.value).lower()
 
     def test_epochs_out_of_range(self):
         """Test that epochs outside valid range is rejected"""
         with pytest.raises(ValidationError):
-            TrainingConfig(
-                epochs=0,  # Must be >= 1
-                batch_size=4,
-                learning_rate=2e-4
-            )
+            TrainingConfig(epochs=0, batch_size=4, learning_rate=2e-4)  # Must be >= 1
 
 
 class TestSystemConfig:
@@ -181,19 +170,10 @@ class TestFullConfig:
     def test_config_to_dict(self):
         """Test exporting configuration to dictionary"""
         config = Config(
-            model=ModelConfig(
-                base_model="org/model",
-                new_model_name="test",
-                quantization="nf4"
-            ),
+            model=ModelConfig(base_model="org/model", new_model_name="test", quantization="nf4"),
             lora=LoRAConfig(r=32, alpha=64, dropout=0.05),
-            training=TrainingConfig(
-                epochs=3,
-                batch_size=4,
-                grad_accum_steps=4,
-                learning_rate=2e-4
-            ),
-            system=SystemConfig(use_wandb=True, log_level="INFO")
+            training=TrainingConfig(epochs=3, batch_size=4, grad_accum_steps=4, learning_rate=2e-4),
+            system=SystemConfig(use_wandb=True, log_level="INFO"),
         )
         config_dict = config.to_dict()
         assert isinstance(config_dict, dict)
@@ -207,5 +187,5 @@ class TestFullConfig:
                 base_model="org/model",
                 new_model_name="test",
                 quantization="nf4",
-                unknown_field="value"  # Should be rejected
+                unknown_field="value",  # Should be rejected
             )

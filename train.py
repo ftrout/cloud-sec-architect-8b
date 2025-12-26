@@ -12,19 +12,21 @@ from config_validation import load_config
 # Load and validate configuration
 config = load_config("config/training_config.yaml")
 
+
 def set_seed(seed: int):
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
     torch.cuda.manual_seed_all(seed)
 
+
 def formatting_prompts_func(batch: dict[str, list[str]]) -> list[str]:
     """Format batch into Llama 3.1 chat format."""
     output_texts = []
-    for i in range(len(batch['instruction'])):
+    for i in range(len(batch["instruction"])):
         system_msg = "You are a Senior Cloud Security Architect. Provide detailed, secure, and compliant technical guidance."
         user_msg = f"{batch['instruction'][i]}\nContext: {batch['input'][i]}"
-        assistant_msg = batch['output'][i]
+        assistant_msg = batch["output"][i]
 
         text = (
             f"<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\n"
@@ -36,6 +38,7 @@ def formatting_prompts_func(batch: dict[str, list[str]]) -> list[str]:
         )
         output_texts.append(text)
     return output_texts
+
 
 def train():
     set_seed(config.training.seed)
@@ -57,7 +60,7 @@ def train():
         config.model.base_model,
         quantization_config=bnb_config,
         device_map="auto",
-        attn_implementation="flash_attention_2"
+        attn_implementation="flash_attention_2",
     )
 
     # Enable Gradient Checkpointing for memory efficiency
@@ -75,7 +78,7 @@ def train():
         lora_dropout=config.lora.dropout,
         bias="none",
         task_type="CAUSAL_LM",
-        target_modules=config.lora.target_modules
+        target_modules=config.lora.target_modules,
     )
     model = get_peft_model(model, peft_config)
 
@@ -114,6 +117,7 @@ def train():
 
     trainer.model.save_pretrained(config.model.new_model_name)
     tokenizer.save_pretrained(config.model.new_model_name)
+
 
 if __name__ == "__main__":
     train()

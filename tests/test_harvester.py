@@ -46,7 +46,7 @@ class TestMinHashDeduplication:
         text2 = "This is a security document about AWS IAM."  # Exact duplicate
 
         assert harvester._is_duplicate(text1, "url1") is False  # First occurrence
-        assert harvester._is_duplicate(text2, "url2") is True   # Duplicate detected
+        assert harvester._is_duplicate(text2, "url2") is True  # Duplicate detected
 
     def test_deduplication_similar_content(self):
         """Test near-duplicate detection"""
@@ -78,10 +78,10 @@ class TestCheckpointManagement:
     def test_checkpoint_save_and_load(self):
         """Test checkpoint persistence"""
         with tempfile.TemporaryDirectory() as tmpdir:
-            checkpoint_path = os.path.join(tmpdir, 'checkpoint.json')
+            checkpoint_path = os.path.join(tmpdir, "checkpoint.json")
             with (
-                patch('harvest_data.OUTPUT_DIR', tmpdir),
-                patch('harvest_data.CHECKPOINT_FILE', checkpoint_path),
+                patch("harvest_data.OUTPUT_DIR", tmpdir),
+                patch("harvest_data.CHECKPOINT_FILE", checkpoint_path),
             ):
                 harvester = DataHarvester()
                 harvester.visited = {"url1", "url2", "url3"}
@@ -99,13 +99,13 @@ class TestCheckpointManagement:
     def test_checkpoint_load_failure_handling(self):
         """Test graceful handling of corrupted checkpoint"""
         with tempfile.TemporaryDirectory() as tmpdir:
-            checkpoint_file = os.path.join(tmpdir, 'checkpoint.json')
+            checkpoint_file = os.path.join(tmpdir, "checkpoint.json")
 
             # Write corrupted JSON
-            with open(checkpoint_file, 'w') as f:
+            with open(checkpoint_file, "w") as f:
                 f.write("{invalid json")
 
-            with patch('harvest_data.CHECKPOINT_FILE', checkpoint_file):
+            with patch("harvest_data.CHECKPOINT_FILE", checkpoint_file):
                 # Should not crash, just start fresh
                 harvester = DataHarvester()
                 assert harvester.collected_count == 0
@@ -162,8 +162,10 @@ class TestInstructionFormatting:
 
         assert len(formatted) == len(INSTRUCTION_TEMPLATES)
         assert all(domain in instruction for instruction in formatted)
-        assert "Explain docs.aws.amazon.com" in " ".join(formatted) or \
-               "explain" in " ".join(formatted).lower()
+        assert (
+            "Explain docs.aws.amazon.com" in " ".join(formatted)
+            or "explain" in " ".join(formatted).lower()
+        )
 
     def test_template_diversity(self):
         """Test that templates provide diverse instructions"""
@@ -205,8 +207,8 @@ class TestURLDomainFiltering:
 class TestDataHarvesterIntegration:
     """Integration tests for full harvester workflow"""
 
-    @patch('harvest_data.trafilatura.fetch_url')
-    @patch('harvest_data.trafilatura.extract')
+    @patch("harvest_data.trafilatura.fetch_url")
+    @patch("harvest_data.trafilatura.extract")
     def test_harvester_with_mock_data(self, mock_extract, mock_fetch):
         """Test harvester with mocked network calls"""
         # Setup mocks
@@ -220,9 +222,9 @@ class TestDataHarvesterIntegration:
             output_file = os.path.join(tmpdir, "test_output.jsonl")
 
             with (
-                patch('harvest_data.OUTPUT_DIR', tmpdir),
-                patch('harvest_data.OUTPUT_FILE', output_file),
-                patch('harvest_data.MAX_PAGES', 1),  # Only process 1 page
+                patch("harvest_data.OUTPUT_DIR", tmpdir),
+                patch("harvest_data.OUTPUT_FILE", output_file),
+                patch("harvest_data.MAX_PAGES", 1),  # Only process 1 page
             ):
                 DataHarvester()  # Instantiate to test initialization
                 # Mock to prevent actual network calls
@@ -233,7 +235,7 @@ class TestDataHarvesterIntegration:
         sample_entry = {
             "instruction": "Test instruction",
             "input": "Source: https://example.com",
-            "output": "Test output content"
+            "output": "Test output content",
         }
 
         # Should be valid JSON

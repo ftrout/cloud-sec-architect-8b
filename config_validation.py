@@ -13,16 +13,14 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator
 class ModelConfig(BaseModel):
     """Model configuration schema"""
 
-    model_config = ConfigDict(extra='forbid')
+    model_config = ConfigDict(extra="forbid")
 
     base_model: str = Field(
         ...,
         description="HuggingFace model ID",
         examples=["meta-llama/Meta-Llama-3.1-8B-Instruct"],
     )
-    new_model_name: str = Field(
-        ..., description="Name for the fine-tuned model", min_length=1
-    )
+    new_model_name: str = Field(..., description="Name for the fine-tuned model", min_length=1)
     quantization: Literal["nf4", "fp4"] = Field(
         default="nf4", description="Quantization type for 4-bit loading"
     )
@@ -39,7 +37,7 @@ class ModelConfig(BaseModel):
 class LoRAConfig(BaseModel):
     """LoRA (Low-Rank Adaptation) configuration schema"""
 
-    model_config = ConfigDict(extra='forbid')
+    model_config = ConfigDict(extra="forbid")
 
     r: int = Field(..., ge=1, le=256, description="LoRA rank")
     alpha: int = Field(..., ge=1, description="LoRA alpha scaling parameter")
@@ -64,29 +62,21 @@ class LoRAConfig(BaseModel):
         # Note: in pydantic v2, we access other fields via info.data
         r_value = info.data.get("r")
         if r_value and v > r_value * 10:
-            raise ValueError(
-                f"alpha ({v}) should typically be <= 10x rank ({r_value})"
-            )
+            raise ValueError(f"alpha ({v}) should typically be <= 10x rank ({r_value})")
         return v
 
 
 class TrainingConfig(BaseModel):
     """Training hyperparameters configuration schema"""
 
-    model_config = ConfigDict(extra='forbid')
+    model_config = ConfigDict(extra="forbid")
 
     seed: int = Field(default=42, ge=0, description="Random seed for reproducibility")
     epochs: int = Field(..., ge=1, le=100, description="Number of training epochs")
     batch_size: int = Field(..., ge=1, le=128, description="Per-device batch size")
-    grad_accum_steps: int = Field(
-        default=1, ge=1, description="Gradient accumulation steps"
-    )
-    learning_rate: float = Field(
-        ..., gt=0.0, le=1.0, description="Learning rate"
-    )
-    warmup_ratio: float = Field(
-        default=0.0, ge=0.0, le=0.5, description="Warmup ratio"
-    )
+    grad_accum_steps: int = Field(default=1, ge=1, description="Gradient accumulation steps")
+    learning_rate: float = Field(..., gt=0.0, le=1.0, description="Learning rate")
+    warmup_ratio: float = Field(default=0.0, ge=0.0, le=0.5, description="Warmup ratio")
     max_seq_length: int = Field(
         default=2048, ge=128, le=8192, description="Maximum sequence length"
     )
@@ -117,24 +107,19 @@ class TrainingConfig(BaseModel):
         """Warn if learning rate is unusually high or low"""
         if v > 1e-3:
             raise ValueError(
-                f"Learning rate {v} is very high for fine-tuning. "
-                f"Typically use 1e-5 to 5e-4"
+                f"Learning rate {v} is very high for fine-tuning. " f"Typically use 1e-5 to 5e-4"
             )
         if v < 1e-6:
-            raise ValueError(
-                f"Learning rate {v} is very low and may not train effectively"
-            )
+            raise ValueError(f"Learning rate {v} is very low and may not train effectively")
         return v
 
 
 class SystemConfig(BaseModel):
     """System and logging configuration schema"""
 
-    model_config = ConfigDict(extra='forbid')
+    model_config = ConfigDict(extra="forbid")
 
-    use_wandb: bool = Field(
-        default=True, description="Enable Weights & Biases logging"
-    )
+    use_wandb: bool = Field(default=True, description="Enable Weights & Biases logging")
     log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"] = Field(
         default="INFO", description="Logging level"
     )
@@ -143,7 +128,7 @@ class SystemConfig(BaseModel):
 class Config(BaseModel):
     """Root configuration schema"""
 
-    model_config = ConfigDict(extra='forbid')
+    model_config = ConfigDict(extra="forbid")
 
     model: ModelConfig
     lora: LoRAConfig
@@ -204,7 +189,9 @@ if __name__ == "__main__":
         print(f"  Model: {config.model.base_model}")
         print(f"  LoRA rank: {config.lora.r}")
         print(f"  Epochs: {config.training.epochs}")
-        print(f"  Effective batch size: {config.training.batch_size * config.training.grad_accum_steps}")
+        print(
+            f"  Effective batch size: {config.training.batch_size * config.training.grad_accum_steps}"
+        )
         print(f"  Learning rate: {config.training.learning_rate}")
     except Exception as e:
         print("❌ Configuration validation failed:")

@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Literal
 
 import yaml
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 
 class ModelConfig(BaseModel):
@@ -85,21 +85,18 @@ class TrainingConfig(BaseModel):
     save_steps: int = Field(default=500, ge=1, description="Checkpoint save frequency")
     output_dir: str = Field(default="./results", description="Output directory path")
 
-    @field_validator("batch_size", "grad_accum_steps")
-    @classmethod
-    def validate_batch_config(cls, v: int, info) -> int:
+    @model_validator(mode="after")
+    def validate_effective_batch_size(self):
         """Validate effective batch size isn't too large"""
-        batch_size = info.data.get("batch_size", 1)
-        grad_accum = info.data.get("grad_accum_steps", 1)
-        effective_batch = batch_size * grad_accum
+        effective_batch = self.batch_size * self.grad_accum_steps
 
         if effective_batch > 128:
             raise ValueError(
                 f"Effective batch size ({effective_batch}) = "
-                f"batch_size ({batch_size}) x grad_accum_steps ({grad_accum}) "
+                f"batch_size ({self.batch_size}) x grad_accum_steps ({self.grad_accum_steps}) "
                 f"should not exceed 128 for stability"
             )
-        return v
+        return self
 
     @field_validator("learning_rate")
     @classmethod

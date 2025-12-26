@@ -24,8 +24,8 @@ A specialized fine-tuned LLM designed to function as a **Senior Cloud Security A
 ### Installation
 
 ```bash
-git clone https://github.com/ftrout/cloud-sec-arch-llm.git
-cd cloud-sec-arch-llm
+git clone https://github.com/ftrout/cloud-sec-architect-8b.git
+cd cloud-sec-architect-8b
 pip install -r requirements.txt
 ```
 

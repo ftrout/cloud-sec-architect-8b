@@ -45,7 +45,7 @@ A specialized fine-tuned LLM designed to function as a **Senior Cloud Security A
 
 ### Model Sources
 
-- **Repository:** [GitHub - cloud-sec-architect-8b](https://github.com/ftrout/cloud-sec-arch-llm)
+- **Repository:** [GitHub - cloud-sec-architect-8b](https://github.com/ftrout/cloud-sec-architect-8b)
 - **Base Model:** [meta-llama/Meta-Llama-3.1-8B-Instruct](https://huggingface.co/meta-llama/Meta-Llama-3.1-8B-Instruct)
 
 ## Uses
@@ -266,4 +266,4 @@ Frank Trout
 
 ## Model Card Contact
 
-For questions, issues, or contributions, please open an issue on the [GitHub repository](https://github.com/ftrout/cloud-sec-arch-llm).
+For questions, issues, or contributions, please open an issue on the [GitHub repository](https://github.com/ftrout/cloud-sec-architect-8b).

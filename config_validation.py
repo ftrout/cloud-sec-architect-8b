@@ -206,6 +206,6 @@ if __name__ == "__main__":
         print(f"  Effective batch size: {config.training.batch_size * config.training.grad_accum_steps}")
         print(f"  Learning rate: {config.training.learning_rate}")
     except Exception as e:
-        print(f"❌ Configuration validation failed:")
+        print("❌ Configuration validation failed:")
         print(f"  {e}")
         exit(1)

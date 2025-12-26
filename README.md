@@ -1,10 +1,15 @@
-# Cloud-Sec-Architect-AI
+# cloud-sec-architect-8b
 
-`Cloud-Sec-Architect-AI` is a specialized fine-tuning pipeline designed to create an AI model capable of functioning as a **Senior Cloud Security Architect**. Unlike generic LLMs, this model is rigorously trained on high-fidelity, vendor-agnostic documentation, threat frameworks, and infrastructure-as-code (IaC) standards. It excels at designing secure multi-cloud environments, performing gap analysis, and mapping technical implementations to compliance frameworks (NIST, CIS, ISO).
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![Hugging Face](https://img.shields.io/badge/Hugging%20Face-Model-orange)](https://huggingface.co/ftrout/cloud-sec-architect-8b)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
+A specialized fine-tuned LLM designed to function as a **Senior Cloud Security Architect**. Built on Meta's Llama 3.1 8B Instruct, this model provides expert-level guidance on multi-cloud security architecture, compliance frameworks, and infrastructure-as-code security.
 
 ---
 
-## 🚀 Key Features
+## Key Features
 
 * **Multi-Cloud Expertise:** Deep knowledge of **AWS**, **Azure**, **GCP**, and **Kubernetes** security best practices.
 * **Compliance & Standards:** Trained on **NIST 800-53**, **CIS Benchmarks**, **OWASP Top 10**, and **MITRE ATT&CK** for cloud.
@@ -14,84 +19,102 @@
 
 ---
 
-## 🛠️ Prerequisites
+## Quick Start
 
-### Hardware Requirements
+### Installation
 
-* **Training:** NVIDIA GPU with **≥24GB VRAM** (RTX 3090, 4090, or A10G) recommended for efficient 4-bit LoRA training.
-* **Inference:** NVIDIA GPU with **≥12GB VRAM** (RTX 3060/4070) for 4-bit quantized inference.
-* **Disk Space:** ~50GB for datasets and model checkpoints.
-
-### Software Stack
-
-* **OS:** Linux (Ubuntu 22.04 LTS recommended) or WSL2.
-* **Python:** 3.10+.
-* **Core Libraries:** `torch`, `transformers`, `peft`, `trl`, `trafilatura`, `datasketch`.
-
----
-
-## 📦 Installation
-
-1. **Clone the Repository**
 ```bash
-git clone https://github.com/your-username/Cloud-Sec-Architect-AI.git
-cd Cloud-Sec-Architect-AI
-```
-
-
-2. **Create Virtual Environment**
-```bash
-python -m venv venv
-source venv/bin/activate
-```
-
-
-3. **Install Dependencies**
-```bash
+git clone https://github.com/ftrout/cloud-sec-arch-llm.git
+cd cloud-sec-arch-llm
 pip install -r requirements.txt
 ```
 
+### Run the Demo
 
-4. **Hugging Face Login** (Required for Llama 3.1)
 ```bash
-huggingface-cli login
-# Enter your HF Token with access to meta-llama/Meta-Llama-3.1-8B-Instruct
+# Gradio web interface
+python demo.py
+
+# Command-line inference
+python scripts/inference.py --interactive
 ```
 
+### Use from Hugging Face Hub
 
+```python
+import torch
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+from peft import PeftModel
+
+# Load base model with 4-bit quantization
+bnb_config = BitsAndBytesConfig(
+    load_in_4bit=True,
+    bnb_4bit_quant_type="nf4",
+    bnb_4bit_compute_dtype=torch.bfloat16,
+)
+
+model = AutoModelForCausalLM.from_pretrained(
+    "meta-llama/Meta-Llama-3.1-8B-Instruct",
+    quantization_config=bnb_config,
+    device_map="auto",
+)
+
+# Load fine-tuned adapter
+model = PeftModel.from_pretrained(model, "ftrout/cloud-sec-architect-8b")
+
+tokenizer = AutoTokenizer.from_pretrained("meta-llama/Meta-Llama-3.1-8B-Instruct")
+```
 
 ---
 
-## 🔄 The Pipeline
+## Prerequisites
 
-### Step 1: The Data Engine (`harvest_data.py`)
+### Hardware Requirements
 
-This script acts as the "Brain" of the operation. It crawls a curated list of professional documentation roots (AWS Prescriptive Guidance, Azure Well-Architected, NIST, etc.), extracts the main content, checks strictly for technical depth (Grade Level > 8), and removes semantic duplicates.
+| Use Case | GPU VRAM | Example GPUs |
+|----------|----------|--------------|
+| **Training** | ≥24GB | RTX 3090, RTX 4090, A10G, A100 |
+| **Inference** | ≥12GB | RTX 3060, RTX 4070, T4 |
+| **Disk Space** | ~50GB | For datasets and checkpoints |
+
+### Software Stack
+
+* **OS:** Linux (Ubuntu 22.04 LTS recommended) or WSL2
+* **Python:** 3.10+
+* **Core Libraries:** `torch`, `transformers`, `peft`, `trl`, `trafilatura`, `datasketch`
+
+---
+
+## The Pipeline
+
+### Step 1: Data Engine (`harvest_data.py`)
+
+Crawls curated professional documentation (AWS, Azure, GCP, Kubernetes, NIST, CIS), extracts main content, filters for technical depth (Grade Level > 8), and removes semantic duplicates.
 
 ```bash
 python harvest_data.py
 ```
 
 * **Inputs:** Curated list of high-value domains (AWS, Azure, K8s, CIS, MITRE).
-* **Process:** Fetch -> Extract Main Text -> Quality Filter -> Deduplicate -> Chunk.
+* **Process:** Fetch → Extract Main Text → Quality Filter → Deduplicate → Chunk.
 * **Output:** `./data/architect_training_data.jsonl`
 
-### Step 2: The Training Lab (`train.py`)
+### Step 2: Training Lab (`train.py`)
 
-Fine-tunes **Llama 3.1 8B** using **QLoRA** (Quantized Low-Rank Adaptation). This script injects a "Senior Architect" persona into the system prompt and trains the model to answer user queries with precise, compliant technical guidance.
+Fine-tunes **Llama 3.1 8B** using **QLoRA** (Quantized Low-Rank Adaptation). Injects a "Senior Architect" persona and trains the model to provide precise, compliant technical guidance.
 
 ```bash
 python train.py
 ```
 
-* **Base Model:** `meta-llama/Meta-Llama-3.1-8B-Instruct`.
-* **Technique:** 4-bit Quantization + LoRA (Rank 32).
-* **Output:** `./cloud-architect-v1` (The trained adapter weights).
-* **Training Time:** ~2-4 hours on a single RTX 3090.
+* **Base Model:** `meta-llama/Meta-Llama-3.1-8B-Instruct`
+* **Technique:** 4-bit Quantization + LoRA (Rank 32)
+* **Output:** `./cloud-sec-architect-8b` (The trained adapter weights)
+* **Training Time:** ~2-4 hours on a single RTX 3090
 
-### Step 3: The Judge (`evaluate.py`)
+### Step 3: Evaluation (`evaluate.py`)
 
-Validates the model against a "Golden Set" of complex architectural questions. This ensures the model isn't just reciting facts but can reason through design trade-offs (e.g., "OIDC vs. SAML", "Private Link vs. Service Endpoints").
+Validates the model against a "Golden Set" of complex architectural questions to ensure reasoning capability.
 
 ```bash
 python evaluate.py
@@ -99,48 +122,115 @@ python evaluate.py
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
 ```text
-Cloud-Sec-Architect-AI/
+cloud-sec-architect-8b/
 ├── config/                     # Configuration files
 │   └── training_config.yaml
 ├── data/                       # Generated datasets
 │   └── architect_training_data.jsonl
-├── cloud-architect-v1/         # Saved LoRA Adapters
+├── scripts/                    # Utility scripts
+│   ├── inference.py            # CLI inference
+│   └── upload_to_hub.py        # HuggingFace upload
+├── cloud-sec-architect-8b/     # Saved LoRA Adapters
 │   ├── adapter_config.json
 │   └── adapter_model.safetensors
 ├── results/                    # Training checkpoints
 ├── tests/                      # Unit tests
+│   ├── test_config.py
 │   └── test_harvester.py
-├── harvest_data.py             # Data Engine (Scraping & Cleaning)
-├── train.py                    # Training Script (Llama 3.1 + QLoRA)
-├── evaluate.py                 # Evaluation Script (Golden Set)
-├── requirements.txt            # Python dependencies
+├── harvest_data.py             # Data Engine
+├── train.py                    # Training Script
+├── evaluate.py                 # Evaluation Script
+├── demo.py                     # Gradio Web Interface
+├── MODEL_CARD.md               # HuggingFace Model Card
+├── requirements.txt            # Dependencies
+├── pyproject.toml              # Package configuration
 └── README.md                   # Documentation
 ```
 
 ---
 
-## 🧠 Model Architecture Details
+## Model Architecture
 
 | Component | Specification |
-| --- | --- |
+|-----------|---------------|
 | **Base Model** | Llama 3.1 8B Instruct |
-| **Prompt Format** | Llama 3 (`< |
-| **Quantization** | 4-bit NF4 (Normal Float 4) |
+| **Fine-tuning Method** | QLoRA (4-bit NF4) |
 | **LoRA Rank (r)** | 32 |
+| **LoRA Alpha** | 64 |
 | **Target Modules** | `all-linear` (Self-Attention & MLP layers) |
-| **Context Window** | 2048 tokens (Effective training length) |
+| **Context Window** | 2048 tokens (training) |
 
 ---
 
-## ⚠️ Disclaimer
+## Uploading to Hugging Face
+
+After training, upload your model to Hugging Face Hub:
+
+```bash
+# Upload LoRA adapter (recommended - smaller size)
+python scripts/upload_to_hub.py --repo-id your-username/cloud-sec-architect-8b
+
+# Upload merged full model (larger but easier to use)
+python scripts/upload_to_hub.py --repo-id your-username/cloud-sec-architect-8b-merged --merge
+```
+
+---
+
+## Development
+
+### Setup Development Environment
+
+```bash
+# Install with dev dependencies
+pip install -e ".[dev]"
+
+# Run tests
+pytest
+
+# Run linting
+ruff check .
+black --check .
+mypy .
+```
+
+### Pre-commit Hooks
+
+```bash
+pre-commit install
+pre-commit run --all-files
+```
+
+---
+
+## Disclaimer
 
 This tool is for educational and research purposes. While trained on authoritative sources, AI models can hallucinate. Always verify architectural decisions against official vendor documentation and your organization's compliance requirements before implementation.
 
 ---
 
-## 🤝 Contributing
+## Citation
+
+```bibtex
+@misc{cloud-sec-architect-8b,
+  author = {Trout, Frank},
+  title = {cloud-sec-architect-8b: A Fine-tuned LLM for Cloud Security Architecture},
+  year = {2024},
+  publisher = {Hugging Face},
+  howpublished = {\url{https://huggingface.co/ftrout/cloud-sec-architect-8b}}
+}
+```
+
+---
+
+## Contributing
 
 Contributions to expand the `START_URLS` list in the Data Engine or add new "Golden Questions" to the evaluator are highly encouraged! Please open a PR.
+
+---
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

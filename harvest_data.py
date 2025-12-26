@@ -15,8 +15,8 @@ from trafilatura.settings import use_config
 # Configure Logging
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s | %(levelname)s | %(message)s',
-    handlers=[logging.FileHandler("harvester.log"), logging.StreamHandler()]
+    format="%(asctime)s | %(levelname)s | %(message)s",
+    handlers=[logging.FileHandler("harvester.log"), logging.StreamHandler()],
 )
 logger = logging.getLogger(__name__)
 
@@ -47,9 +47,14 @@ START_URLS = [
 ]
 
 ALLOWED_DOMAINS = [
-    "docs.aws.amazon.com", "learn.microsoft.com", "cloud.google.com",
-    "kubernetes.io", "attack.mitre.org", "www.cisecurity.org"
+    "docs.aws.amazon.com",
+    "learn.microsoft.com",
+    "cloud.google.com",
+    "kubernetes.io",
+    "attack.mitre.org",
+    "www.cisecurity.org",
 ]
+
 
 class DataHarvester:
     def __init__(self):
@@ -67,7 +72,7 @@ class DataHarvester:
     def _get_minhash(self, text: str) -> MinHash:
         m = MinHash(num_perm=128)
         for word in text.split():
-            m.update(word.encode('utf8'))
+            m.update(word.encode("utf8"))
         return m
 
     def _is_duplicate(self, text: str, doc_id: str) -> bool:
@@ -79,12 +84,15 @@ class DataHarvester:
 
     def _save_checkpoint(self):
         """Saves current state to allow resuming."""
-        with open(CHECKPOINT_FILE, 'w') as f:
-            json.dump({
-                "visited": list(self.visited),
-                "queue": self.queue,
-                "collected_count": self.collected_count
-            }, f)
+        with open(CHECKPOINT_FILE, "w") as f:
+            json.dump(
+                {
+                    "visited": list(self.visited),
+                    "queue": self.queue,
+                    "collected_count": self.collected_count,
+                },
+                f,
+            )
         logger.info("Checkpoint saved.")
 
     def _load_checkpoint(self):
@@ -103,7 +111,7 @@ class DataHarvester:
     def run(self):
         os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-        with open(OUTPUT_FILE, 'a', encoding='utf-8') as f:
+        with open(OUTPUT_FILE, "a", encoding="utf-8") as f:
             while self.queue and self.collected_count < MAX_PAGES:
                 url = self.queue.pop(0)
                 if url in self.visited:
@@ -125,8 +133,10 @@ class DataHarvester:
                             logger.warning(f"Empty response from {url}")
                         break  # Success, exit retry loop
                     except (RequestException, Timeout, ConnectionError) as e:
-                        wait_time = BACKOFF_FACTOR ** attempt
-                        logger.warning(f"Network error (attempt {attempt+1}/{MAX_RETRIES}) for {url}: {e}")
+                        wait_time = BACKOFF_FACTOR**attempt
+                        logger.warning(
+                            f"Network error (attempt {attempt+1}/{MAX_RETRIES}) for {url}: {e}"
+                        )
                         if attempt < MAX_RETRIES - 1:
                             time.sleep(wait_time)
                         else:
@@ -145,7 +155,9 @@ class DataHarvester:
                     continue
 
                 try:
-                    text = trafilatura.extract(downloaded, include_comments=False, include_tables=True, no_fallback=True)
+                    text = trafilatura.extract(
+                        downloaded, include_comments=False, include_tables=True, no_fallback=True
+                    )
                     if not text:
                         logger.debug(f"No extractable text from {url}")
                         continue
@@ -164,7 +176,7 @@ class DataHarvester:
                         continue
 
                     # Chunking & Instruction Selection
-                    chunks = text.split('\n\n')
+                    chunks = text.split("\n\n")
                     buffer = ""
 
                     for chunk in chunks:
@@ -179,7 +191,7 @@ class DataHarvester:
                                 entry = {
                                     "instruction": instruction,
                                     "input": f"Source: {url}",
-                                    "output": buffer.strip()
+                                    "output": buffer.strip(),
                                 }
                                 f.write(json.dumps(entry) + "\n")
                                 self.collected_count += 1
@@ -189,7 +201,10 @@ class DataHarvester:
                     if isinstance(downloaded, str):
                         for link in re.findall(r'href=[\'"]?([^\'" >]+)', downloaded):
                             full_link = urljoin(url, link)
-                            if urlparse(full_link).netloc in ALLOWED_DOMAINS and full_link not in self.visited:
+                            if (
+                                urlparse(full_link).netloc in ALLOWED_DOMAINS
+                                and full_link not in self.visited
+                            ):
                                 self.queue.append(full_link)
 
                     # Periodically save checkpoint
@@ -203,6 +218,7 @@ class DataHarvester:
                     continue
 
         logger.info(f"Harvest Complete. Saved {self.collected_count} samples.")
+
 
 if __name__ == "__main__":
     harvester = DataHarvester()

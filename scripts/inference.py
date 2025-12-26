@@ -100,7 +100,7 @@ class CloudSecurityArchitect:
             )
 
         response = self.tokenizer.decode(
-            outputs[0][input_ids.shape[1]:],
+            outputs[0][input_ids.shape[1] :],
             skip_special_tokens=True,
         )
 
@@ -163,7 +163,8 @@ def main():
         help="The prompt to send to the model",
     )
     parser.add_argument(
-        "--interactive", "-i",
+        "--interactive",
+        "-i",
         action="store_true",
         help="Run in interactive mode",
     )

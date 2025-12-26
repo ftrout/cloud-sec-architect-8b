@@ -95,17 +95,11 @@ def generate_response(
 
     # Tokenize input
     input_ids = tokenizer.apply_chat_template(
-        messages,
-        return_tensors="pt",
-        add_generation_prompt=True
+        messages, return_tensors="pt", add_generation_prompt=True
     ).to(model.device)
 
     # Set up streaming
-    streamer = TextIteratorStreamer(
-        tokenizer,
-        skip_prompt=True,
-        skip_special_tokens=True
-    )
+    streamer = TextIteratorStreamer(tokenizer, skip_prompt=True, skip_special_tokens=True)
 
     # Generation config
     generation_kwargs = {
@@ -152,7 +146,7 @@ def create_demo(model, tokenizer) -> gr.Blocks:
         css="""
         .gradio-container { max-width: 900px !important; }
         .disclaimer { font-size: 0.85em; color: #666; padding: 10px; background: #f9f9f9; border-radius: 8px; margin-top: 10px; }
-        """
+        """,
     ) as demo:
         gr.Markdown(
             """
@@ -224,7 +218,7 @@ def create_demo(model, tokenizer) -> gr.Blocks:
             compliance requirements before implementation. AI models can produce inaccurate information.
             </div>
             """,
-            elem_classes=["disclaimer"]
+            elem_classes=["disclaimer"],
         )
 
         # Event handlers

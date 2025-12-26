@@ -2,21 +2,21 @@
 Tests for configuration validation
 """
 
-import pytest
-import sys
 import os
-from pathlib import Path
+import sys
+
+import pytest
 from pydantic import ValidationError
 
 # Add parent directory to path for imports
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from config_validation import (
     Config,
-    ModelConfig,
     LoRAConfig,
-    TrainingConfig,
+    ModelConfig,
     SystemConfig,
-    load_config
+    TrainingConfig,
+    load_config,
 )
 
 

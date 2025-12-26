@@ -1,6 +1,7 @@
 import torch
-from transformers import AutoTokenizer, AutoModelForCausalLM
 from peft import PeftModel
+from transformers import AutoModelForCausalLM, AutoTokenizer
+
 from config_validation import load_config
 
 # Load and validate configuration
@@ -32,15 +33,15 @@ def evaluate():
             {"role": "system", "content": "You are a Senior Cloud Security Architect."},
             {"role": "user", "content": question}
         ]
-        
+
         prompt = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
         inputs = tokenizer(prompt, return_tensors="pt").to("cuda")
-        
+
         with torch.no_grad():
             outputs = model.generate(**inputs, max_new_tokens=512, temperature=0.7)
-        
+
         response = tokenizer.decode(outputs[0][inputs.input_ids.shape[1]:], skip_special_tokens=True)
-        
+
         print(f"Q: {question}")
         print(f"A: {response}\n")
         print("-" * 60)

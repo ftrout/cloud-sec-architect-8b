@@ -13,14 +13,18 @@ Usage:
 
 import argparse
 import os
-from typing import Generator
+from collections.abc import Generator
+from threading import Thread
 
 import gradio as gr
 import torch
-from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, TextIteratorStreamer
 from peft import PeftModel
-from threading import Thread
-
+from transformers import (
+    AutoModelForCausalLM,
+    AutoTokenizer,
+    BitsAndBytesConfig,
+    TextIteratorStreamer,
+)
 
 # Default configuration
 DEFAULT_BASE_MODEL = "meta-llama/Meta-Llama-3.1-8B-Instruct"
@@ -180,29 +184,28 @@ def create_demo(model, tokenizer) -> gr.Blocks:
             )
             submit_btn = gr.Button("Send", variant="primary", scale=1)
 
-        with gr.Accordion("Advanced Settings", open=False):
-            with gr.Row():
-                max_tokens = gr.Slider(
-                    minimum=64,
-                    maximum=2048,
-                    value=512,
-                    step=64,
-                    label="Max New Tokens",
-                )
-                temperature = gr.Slider(
-                    minimum=0.1,
-                    maximum=1.0,
-                    value=0.7,
-                    step=0.1,
-                    label="Temperature",
-                )
-                top_p = gr.Slider(
-                    minimum=0.1,
-                    maximum=1.0,
-                    value=0.9,
-                    step=0.05,
-                    label="Top-p (Nucleus Sampling)",
-                )
+        with gr.Accordion("Advanced Settings", open=False), gr.Row():
+            max_tokens = gr.Slider(
+                minimum=64,
+                maximum=2048,
+                value=512,
+                step=64,
+                label="Max New Tokens",
+            )
+            temperature = gr.Slider(
+                minimum=0.1,
+                maximum=1.0,
+                value=0.7,
+                step=0.1,
+                label="Temperature",
+            )
+            top_p = gr.Slider(
+                minimum=0.1,
+                maximum=1.0,
+                value=0.9,
+                step=0.05,
+                label="Top-p (Nucleus Sampling)",
+            )
 
         with gr.Accordion("Example Prompts", open=True):
             gr.Examples(
@@ -231,7 +234,7 @@ def create_demo(model, tokenizer) -> gr.Blocks:
                 return "", chat_history
 
             # Add user message to history
-            chat_history = chat_history + [[message, ""]]
+            chat_history = [*chat_history, [message, ""]]
 
             # Generate streaming response
             for partial_response in generate_response(

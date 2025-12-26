@@ -18,11 +18,10 @@ import os
 import shutil
 from pathlib import Path
 
-from huggingface_hub import HfApi, create_repo, upload_folder
-from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
-from peft import PeftModel
 import torch
-
+from huggingface_hub import create_repo, upload_folder
+from peft import PeftModel
+from transformers import AutoModelForCausalLM, AutoTokenizer
 
 # Default paths
 DEFAULT_ADAPTER_PATH = "./cloud-sec-architect-8b"
@@ -66,8 +65,6 @@ def upload_adapter(
     commit_message: str = "Upload cloud-sec-architect-8b LoRA adapter",
 ):
     """Upload LoRA adapter to Hugging Face Hub."""
-    api = HfApi()
-
     print(f"Creating/accessing repository: {repo_id}")
     create_repo(repo_id, private=private, exist_ok=True, repo_type="model")
 
@@ -88,7 +85,7 @@ def upload_adapter(
         commit_message=commit_message,
     )
 
-    print(f"\nUpload complete!")
+    print("\nUpload complete!")
     print(f"View your model at: https://huggingface.co/{repo_id}")
 
 

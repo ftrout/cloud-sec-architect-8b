@@ -1,16 +1,16 @@
-import trafilatura
 import json
-import os
-import time
-import re
 import logging
+import os
 import random
+import re
+import time
 from urllib.parse import urljoin, urlparse
-from typing import List, Set, Dict, Optional
+
+import trafilatura
 from datasketch import MinHash, MinHashLSH
+from requests.exceptions import ConnectionError, RequestException, Timeout
 from textstat import textstat
 from trafilatura.settings import use_config
-from requests.exceptions import RequestException, Timeout, ConnectionError
 
 # Configure Logging
 logging.basicConfig(
@@ -54,14 +54,14 @@ ALLOWED_DOMAINS = [
 class DataHarvester:
     def __init__(self):
         self.lsh = MinHashLSH(threshold=0.85, num_perm=128)
-        self.visited: Set[str] = set()
-        self.queue: List[str] = list(START_URLS)
+        self.visited: set[str] = set()
+        self.queue: list[str] = list(START_URLS)
         self.collected_count = 0
-        
+
         # Configure Trafilatura with User Agent
         self.traf_config = use_config()
         self.traf_config.set("DEFAULT", "USER_AGENT", "CloudSecArchAI-Harvester/1.0 (Research)")
-        
+
         self._load_checkpoint()
 
     def _get_minhash(self, text: str) -> MinHash:
@@ -91,7 +91,7 @@ class DataHarvester:
         """Loads state if checkpoint exists."""
         if os.path.exists(CHECKPOINT_FILE):
             try:
-                with open(CHECKPOINT_FILE, 'r') as f:
+                with open(CHECKPOINT_FILE) as f:
                     data = json.load(f)
                     self.visited = set(data["visited"])
                     self.queue = data["queue"]
@@ -102,14 +102,16 @@ class DataHarvester:
 
     def run(self):
         os.makedirs(OUTPUT_DIR, exist_ok=True)
-        
+
         with open(OUTPUT_FILE, 'a', encoding='utf-8') as f:
             while self.queue and self.collected_count < MAX_PAGES:
                 url = self.queue.pop(0)
-                if url in self.visited: continue
-                
+                if url in self.visited:
+                    continue
+
                 domain = urlparse(url).netloc
-                if domain not in ALLOWED_DOMAINS: continue
+                if domain not in ALLOWED_DOMAINS:
+                    continue
 
                 self.visited.add(url)
                 logger.info(f"[{self.collected_count}] Processing: {url}")

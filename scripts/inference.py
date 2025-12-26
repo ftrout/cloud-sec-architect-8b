@@ -11,14 +11,12 @@ Usage:
 """
 
 import argparse
-import sys
 import os
-from typing import Optional
+import sys
 
 import torch
-from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 from peft import PeftModel
-
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 
 # Default configuration
 DEFAULT_BASE_MODEL = "meta-llama/Meta-Llama-3.1-8B-Instruct"
@@ -77,7 +75,7 @@ class CloudSecurityArchitect:
         max_new_tokens: int = 512,
         temperature: float = 0.7,
         top_p: float = 0.9,
-        system_prompt: Optional[str] = None,
+        system_prompt: str | None = None,
     ) -> str:
         """Generate a response to the prompt."""
         messages = [

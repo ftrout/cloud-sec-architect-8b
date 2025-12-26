@@ -3,10 +3,11 @@ Configuration validation using Pydantic for type safety and validation.
 This module provides schema validation for training_config.yaml
 """
 
-import yaml
 from pathlib import Path
-from typing import Literal, Optional
-from pydantic import BaseModel, Field, field_validator, ConfigDict
+from typing import Literal
+
+import yaml
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 class ModelConfig(BaseModel):
@@ -105,7 +106,7 @@ class TrainingConfig(BaseModel):
         if effective_batch > 128:
             raise ValueError(
                 f"Effective batch size ({effective_batch}) = "
-                f"batch_size ({batch_size}) × grad_accum_steps ({grad_accum}) "
+                f"batch_size ({batch_size}) x grad_accum_steps ({grad_accum}) "
                 f"should not exceed 128 for stability"
             )
         return v
@@ -199,7 +200,7 @@ if __name__ == "__main__":
     try:
         config = load_config()
         print("✅ Configuration validation successful!")
-        print(f"\nConfiguration summary:")
+        print("\nConfiguration summary:")
         print(f"  Model: {config.model.base_model}")
         print(f"  LoRA rank: {config.lora.r}")
         print(f"  Epochs: {config.training.epochs}")

@@ -1,17 +1,12 @@
-import torch
-import os
 import random
+
 import numpy as np
-from typing import Dict, List
+import torch
 from datasets import load_dataset
-from transformers import (
-    AutoModelForCausalLM,
-    AutoTokenizer,
-    BitsAndBytesConfig,
-    TrainingArguments
-)
-from peft import LoraConfig, prepare_model_for_kbit_training, get_peft_model
-from trl import SFTTrainer, SFTConfig
+from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+from trl import SFTConfig, SFTTrainer
+
 from config_validation import load_config
 
 # Load and validate configuration
@@ -23,7 +18,7 @@ def set_seed(seed: int):
     torch.manual_seed(seed)
     torch.cuda.manual_seed_all(seed)
 
-def formatting_prompts_func(batch: Dict[str, List[str]]) -> List[str]:
+def formatting_prompts_func(batch: dict[str, list[str]]) -> list[str]:
     """Format batch into Llama 3.1 chat format."""
     output_texts = []
     for i in range(len(batch['instruction'])):

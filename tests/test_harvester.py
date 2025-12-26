@@ -2,19 +2,18 @@
 Comprehensive tests for data harvester
 """
 
-import pytest
-import sys
-import os
 import json
+import os
+import sys
 import tempfile
-from pathlib import Path
-from unittest.mock import Mock, patch, MagicMock
-from datasketch import MinHash
+from unittest.mock import patch
+
+import pytest
 from textstat import textstat
 
 # Add parent directory to path for imports
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from harvest_data import DataHarvester, INSTRUCTION_TEMPLATES
+from harvest_data import INSTRUCTION_TEMPLATES, DataHarvester
 
 
 class TestMinHashDeduplication:
@@ -79,21 +78,23 @@ class TestCheckpointManagement:
     def test_checkpoint_save_and_load(self):
         """Test checkpoint persistence"""
         with tempfile.TemporaryDirectory() as tmpdir:
-            # Create harvester with temporary output directory
-            with patch('harvest_data.OUTPUT_DIR', tmpdir):
-                with patch('harvest_data.CHECKPOINT_FILE', os.path.join(tmpdir, 'checkpoint.json')):
-                    harvester = DataHarvester()
-                    harvester.visited = {"url1", "url2", "url3"}
-                    harvester.queue = ["url4", "url5"]
-                    harvester.collected_count = 42
+            checkpoint_path = os.path.join(tmpdir, 'checkpoint.json')
+            with (
+                patch('harvest_data.OUTPUT_DIR', tmpdir),
+                patch('harvest_data.CHECKPOINT_FILE', checkpoint_path),
+            ):
+                harvester = DataHarvester()
+                harvester.visited = {"url1", "url2", "url3"}
+                harvester.queue = ["url4", "url5"]
+                harvester.collected_count = 42
 
-                    harvester._save_checkpoint()
+                harvester._save_checkpoint()
 
-                    # Create new harvester and verify it loads checkpoint
-                    new_harvester = DataHarvester()
-                    assert new_harvester.collected_count == 42
-                    assert "url1" in new_harvester.visited
-                    assert "url4" in new_harvester.queue
+                # Create new harvester and verify it loads checkpoint
+                new_harvester = DataHarvester()
+                assert new_harvester.collected_count == 42
+                assert "url1" in new_harvester.visited
+                assert "url4" in new_harvester.queue
 
     def test_checkpoint_load_failure_handling(self):
         """Test graceful handling of corrupted checkpoint"""
@@ -135,8 +136,6 @@ class TestQualityGates:
 
     def test_quality_gates_integration(self):
         """Test quality filtering on various text samples"""
-        harvester = DataHarvester()
-
         # Good text: long and technical
         good_text = (
             "Cloud security architecture requires comprehensive understanding of "
@@ -220,12 +219,14 @@ class TestDataHarvesterIntegration:
         with tempfile.TemporaryDirectory() as tmpdir:
             output_file = os.path.join(tmpdir, "test_output.jsonl")
 
-            with patch('harvest_data.OUTPUT_DIR', tmpdir):
-                with patch('harvest_data.OUTPUT_FILE', output_file):
-                    with patch('harvest_data.MAX_PAGES', 1):  # Only process 1 page
-                        harvester = DataHarvester()
-                        # Mock to prevent actual network calls
-                        # This test verifies the processing logic works
+            with (
+                patch('harvest_data.OUTPUT_DIR', tmpdir),
+                patch('harvest_data.OUTPUT_FILE', output_file),
+                patch('harvest_data.MAX_PAGES', 1),  # Only process 1 page
+            ):
+                DataHarvester()  # Instantiate to test initialization
+                # Mock to prevent actual network calls
+                # This test verifies the processing logic works
 
     def test_output_jsonl_format(self):
         """Test that output follows correct JSONL format"""

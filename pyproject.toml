@@ -62,7 +62,7 @@ eval = [
     "bert-score==0.3.13",
 ]
 all = [
-    "cloud-sec-architect-ai[dev,eval]"
+    "cloud-sec-architect-8b[dev,eval]"
 ]
 
 [tool.setuptools.packages.find]

@@ -96,6 +96,3 @@ pip-audit --requirement requirements.txt
 bandit -r . -c pyproject.toml
 ```
 
-## Acknowledgments
-
-We appreciate responsible disclosure and will acknowledge security researchers who help improve this project's security (with their permission).

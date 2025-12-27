@@ -8,7 +8,7 @@ Supports both local adapter paths and HuggingFace Hub models.
 Usage:
     python demo.py                           # Use default local path
     python demo.py --adapter-path ./my-model # Custom local path
-    python demo.py --hf-model ftrout/cloud-sec-architect-8b  # HuggingFace Hub
+    python demo.py --hf-model fmt0816/cloud-sec-architect-8b  # HuggingFace Hub
 """
 
 import argparse
@@ -318,7 +318,7 @@ def main():
         print("\nOptions:")
         print("  1. Train the model first: python train.py")
         print("  2. Specify a different path: python demo.py --adapter-path /path/to/adapter")
-        print("  3. Use HuggingFace Hub: python demo.py --hf-model ftrout/cloud-sec-architect-8b")
+        print("  3. Use HuggingFace Hub: python demo.py --hf-model fmt0816/cloud-sec-architect-8b")
         return 1
 
     # Load model

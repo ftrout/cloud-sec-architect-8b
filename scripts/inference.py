@@ -7,7 +7,7 @@ Simple command-line interface for testing the model.
 Usage:
     python scripts/inference.py "What are the key security considerations for AWS Lambda?"
     python scripts/inference.py --interactive
-    python scripts/inference.py --hf-model ftrout/cloud-sec-architect-8b "Your question"
+    python scripts/inference.py --hf-model fmt0816/cloud-sec-architect-8b "Your question"
 """
 
 import argparse
@@ -220,7 +220,7 @@ def main():
         print("\nOptions:")
         print("  1. Train the model first: python train.py")
         print("  2. Specify a different path: --adapter-path /path/to/adapter")
-        print("  3. Use HuggingFace Hub: --hf-model ftrout/cloud-sec-architect-8b")
+        print("  3. Use HuggingFace Hub: --hf-model fmt0816/cloud-sec-architect-8b")
         return 1
 
     # Load model

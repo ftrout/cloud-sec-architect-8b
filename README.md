@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
-[![Hugging Face](https://img.shields.io/badge/Hugging%20Face-Model-orange)](https://huggingface.co/ftrout/cloud-sec-architect-8b)
+[![Hugging Face](https://img.shields.io/badge/Hugging%20Face-Model-orange)](https://huggingface.co/fmt0816/cloud-sec-architect-8b)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 A specialized fine-tuned LLM designed to function as a **Senior Cloud Security Architect**. Built on Meta's Llama 3.1 8B Instruct, this model provides expert-level guidance on multi-cloud security architecture, compliance frameworks, and infrastructure-as-code security.
@@ -60,7 +60,7 @@ model = AutoModelForCausalLM.from_pretrained(
 )
 
 # Load fine-tuned adapter
-model = PeftModel.from_pretrained(model, "ftrout/cloud-sec-architect-8b")
+model = PeftModel.from_pretrained(model, "fmt0816/cloud-sec-architect-8b")
 
 tokenizer = AutoTokenizer.from_pretrained("meta-llama/Meta-Llama-3.1-8B-Instruct")
 ```
@@ -145,6 +145,10 @@ cloud-sec-architect-8b/
 ├── evaluate.py                 # Evaluation Script
 ├── demo.py                     # Gradio Web Interface
 ├── MODEL_CARD.md               # HuggingFace Model Card
+├── DATASET_CARD.md             # Dataset Documentation
+├── CODE_OF_CONDUCT.md          # Community Guidelines
+├── FAQ.md                      # Frequently Asked Questions
+├── SECURITY.md                 # Security Policy
 ├── requirements.txt            # Dependencies
 ├── pyproject.toml              # Package configuration
 └── README.md                   # Documentation
@@ -171,10 +175,10 @@ After training, upload your model to Hugging Face Hub:
 
 ```bash
 # Upload LoRA adapter (recommended - smaller size)
-python scripts/upload_to_hub.py --repo-id your-username/cloud-sec-architect-8b
+python scripts/upload_to_hub.py --repo-id fmt0816/cloud-sec-architect-8b
 
 # Upload merged full model (larger but easier to use)
-python scripts/upload_to_hub.py --repo-id your-username/cloud-sec-architect-8b-merged --merge
+python scripts/upload_to_hub.py --repo-id fmt0816/cloud-sec-architect-8b-merged --merge
 ```
 
 ---
@@ -219,15 +223,9 @@ This tool is for educational and research purposes. While trained on authoritati
   title = {cloud-sec-architect-8b: A Fine-tuned LLM for Cloud Security Architecture},
   year = {2025},
   publisher = {Hugging Face},
-  howpublished = {\url{https://huggingface.co/ftrout/cloud-sec-architect-8b}}
+  howpublished = {\url{https://huggingface.co/fmt0816/cloud-sec-architect-8b}}
 }
 ```
-
----
-
-## Contributing
-
-Contributions to expand the `START_URLS` list in the Data Engine or add new "Golden Questions" to the evaluator are highly encouraged! Please open a PR.
 
 ---
 

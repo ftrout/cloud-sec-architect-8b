@@ -139,7 +139,7 @@ from peft import PeftModel
 
 # Configuration
 base_model_id = "meta-llama/Meta-Llama-3.1-8B-Instruct"
-adapter_path = "ftrout/cloud-sec-architect-8b"  # or local path
+adapter_path = "fmt0816/cloud-sec-architect-8b"  # or local path
 
 # Load with 4-bit quantization
 bnb_config = BitsAndBytesConfig(
@@ -293,7 +293,7 @@ The use of QLoRA (4-bit quantization) significantly reduces the computational an
   title = {cloud-sec-architect-8b: A Fine-tuned LLM for Cloud Security Architecture},
   year = {2025},
   publisher = {Hugging Face},
-  howpublished = {\url{https://huggingface.co/ftrout/cloud-sec-architect-8b}}
+  howpublished = {\url{https://huggingface.co/fmt0816/cloud-sec-architect-8b}}
 }
 ```
 
@@ -303,4 +303,4 @@ Frank Trout
 
 ## Model Card Contact
 
-For questions, issues, or contributions, please open an issue on the [GitHub repository](https://github.com/ftrout/cloud-sec-architect-8b).
+For questions or issues, please open an issue on the [GitHub repository](https://github.com/ftrout/cloud-sec-architect-8b).

@@ -1,0 +1,42 @@
+# Hugging Face Hub Configuration
+# This file configures behavior when uploading to HF Hub
+
+# Model repository settings
+repo_type: model
+
+# Default branch for uploads
+default_branch: main
+
+# Files to include when uploading (relative to adapter directory)
+include_patterns:
+  - "*.safetensors"
+  - "*.json"
+  - "*.txt"
+  - "README.md"
+  - "config.json"
+  - "adapter_config.json"
+  - "adapter_model.safetensors"
+  - "special_tokens_map.json"
+  - "tokenizer_config.json"
+  - "tokenizer.json"
+
+# Files to exclude from uploads
+exclude_patterns:
+  - "*.pyc"
+  - "__pycache__"
+  - ".git"
+  - ".env"
+  - "*.log"
+  - "checkpoint.json"
+  - "wandb/"
+  - "mlruns/"
+
+# Git LFS patterns (files stored with Git LFS on HF Hub)
+lfs_patterns:
+  - "*.safetensors"
+  - "*.bin"
+  - "*.ckpt"
+  - "*.pt"
+  - "*.pth"
+  - "*.h5"
+  - "*.onnx"

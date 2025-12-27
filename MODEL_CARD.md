@@ -5,11 +5,21 @@ license: mit
 library_name: transformers
 tags:
   - llama
+  - llama-3
   - llama-3.1
   - cloud-security
   - security-architecture
+  - cybersecurity
+  - aws
+  - azure
+  - gcp
+  - kubernetes
+  - compliance
+  - nist
+  - cis-benchmarks
   - fine-tuned
   - qlora
+  - lora
   - 8b
   - text-generation
   - conversational
@@ -20,6 +30,23 @@ model-index:
     results: []
 datasets:
   - custom
+widget:
+  - text: "What are the key security considerations when designing a multi-region AWS architecture?"
+    example_title: "AWS Multi-Region Security"
+  - text: "How should I implement Zero Trust architecture for a hybrid cloud environment?"
+    example_title: "Zero Trust Architecture"
+  - text: "What Kubernetes security controls are needed for PCI-DSS compliance?"
+    example_title: "Kubernetes PCI-DSS"
+  - text: "Compare Azure Private Endpoints vs Service Endpoints for securing database access."
+    example_title: "Azure Network Security"
+  - text: "When should I use OIDC vs SAML for enterprise identity federation?"
+    example_title: "Identity Federation"
+inference:
+  parameters:
+    max_new_tokens: 512
+    temperature: 0.7
+    top_p: 0.9
+    do_sample: true
 ---
 
 # cloud-sec-architect-8b
@@ -38,7 +65,7 @@ A specialized fine-tuned LLM designed to function as a **Senior Cloud Security A
 - Providing actionable security architecture guidance
 
 - **Developed by:** Frank Trout
-- **Model type:** Causal Language Model (Fine-tuned)
+- **Model type:** Causal Language Model (Fine-tuned with LoRA)
 - **Language(s):** English
 - **License:** MIT
 - **Finetuned from model:** [meta-llama/Meta-Llama-3.1-8B-Instruct](https://huggingface.co/meta-llama/Meta-Llama-3.1-8B-Instruct)
@@ -247,6 +274,16 @@ The model was evaluated against a "Golden Set" of complex architectural question
 - **Training Framework:** PyTorch + Transformers + PEFT + TRL
 - **Experiment Tracking:** Weights & Biases
 - **Training Time:** ~2-4 hours on single RTX 3090
+
+## Environmental Impact
+
+Training was performed on consumer-grade hardware using QLoRA for efficiency:
+
+- **Hardware Type:** Single GPU (NVIDIA RTX 3090, 24GB VRAM)
+- **Hours used:** ~2-4 hours
+- **Carbon Emitted:** Estimated < 1 kg CO2eq (based on US average grid intensity)
+
+The use of QLoRA (4-bit quantization) significantly reduces the computational and environmental footprint compared to full fine-tuning.
 
 ## Citation
 

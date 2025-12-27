@@ -16,7 +16,7 @@ We take security vulnerabilities seriously. If you discover a security issue, pl
 
 Instead, please report them via one of the following methods:
 
-1. **GitHub Security Advisories**: Use the [Security tab](https://github.com/ftrout/cloud-sec-architect-8b/security/advisories/new) to privately report a vulnerability.
+1. **GitHub Security Advisories**: Use the [Security tab](https://github.com/ftrout/CloudSec-Arch-8b/security/advisories/new) to privately report a vulnerability.
 
 2. **Email**: Send details to the repository maintainer (see GitHub profile for contact information).
 

@@ -1,6 +1,6 @@
 model:
   base_model: "meta-llama/Meta-Llama-3.1-8B-Instruct"
-  new_model_name: "cloud-sec-architect-8b"
+  new_model_name: "CloudSec-Arch-8b"
   quantization: "nf4"
 
 lora:

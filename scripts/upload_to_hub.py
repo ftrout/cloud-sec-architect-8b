@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Upload cloud-sec-architect-8b to Hugging Face Hub.
+Upload CloudSec-Arch-8b to Hugging Face Hub.
 
 This script handles:
 1. Loading the trained LoRA adapter
@@ -8,9 +8,9 @@ This script handles:
 3. Uploading to Hugging Face Hub with proper model card
 
 Usage:
-    python scripts/upload_to_hub.py --repo-id your-username/cloud-sec-architect-8b
-    python scripts/upload_to_hub.py --repo-id your-username/cloud-sec-architect-8b --merge
-    python scripts/upload_to_hub.py --repo-id your-username/cloud-sec-architect-8b --private
+    python scripts/upload_to_hub.py --repo-id your-username/CloudSec-Arch-8b
+    python scripts/upload_to_hub.py --repo-id your-username/CloudSec-Arch-8b --merge
+    python scripts/upload_to_hub.py --repo-id your-username/CloudSec-Arch-8b --private
 """
 
 import argparse
@@ -24,7 +24,7 @@ from peft import PeftModel
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 # Default paths
-DEFAULT_ADAPTER_PATH = "./cloud-sec-architect-8b"
+DEFAULT_ADAPTER_PATH = "./CloudSec-Arch-8b"
 DEFAULT_BASE_MODEL = "meta-llama/Meta-Llama-3.1-8B-Instruct"
 MODEL_CARD_PATH = "./MODEL_CARD.md"
 
@@ -62,7 +62,7 @@ def upload_adapter(
     adapter_path: str,
     repo_id: str,
     private: bool = False,
-    commit_message: str = "Upload cloud-sec-architect-8b LoRA adapter",
+    commit_message: str = "Upload CloudSec-Arch-8b LoRA adapter",
 ):
     """Upload LoRA adapter to Hugging Face Hub."""
     print(f"Creating/accessing repository: {repo_id}")
@@ -91,18 +91,18 @@ def upload_adapter(
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Upload cloud-sec-architect-8b to Hugging Face Hub",
+        description="Upload CloudSec-Arch-8b to Hugging Face Hub",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
     # Upload LoRA adapter only (recommended for saving space)
-    python scripts/upload_to_hub.py --repo-id myuser/cloud-sec-architect-8b
+    python scripts/upload_to_hub.py --repo-id myuser/CloudSec-Arch-8b
 
     # Upload merged full model (larger, but easier to use)
-    python scripts/upload_to_hub.py --repo-id myuser/cloud-sec-architect-8b-merged --merge
+    python scripts/upload_to_hub.py --repo-id myuser/CloudSec-Arch-8b-merged --merge
 
     # Upload as private model
-    python scripts/upload_to_hub.py --repo-id myuser/cloud-sec-architect-8b --private
+    python scripts/upload_to_hub.py --repo-id myuser/CloudSec-Arch-8b --private
         """,
     )
 
@@ -137,8 +137,8 @@ Examples:
     parser.add_argument(
         "--merged-output",
         type=str,
-        default="./cloud-sec-architect-8b-merged",
-        help="Output path for merged model (default: ./cloud-sec-architect-8b-merged)",
+        default="./CloudSec-Arch-8b-merged",
+        help="Output path for merged model (default: ./CloudSec-Arch-8b-merged)",
     )
 
     args = parser.parse_args()
@@ -169,7 +169,7 @@ Examples:
             args.merged_output,
             args.repo_id,
             args.private,
-            "Upload cloud-sec-architect-8b merged model",
+            "Upload CloudSec-Arch-8b merged model",
         )
     else:
         # Upload adapter only

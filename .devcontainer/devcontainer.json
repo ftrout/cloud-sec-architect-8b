@@ -7,7 +7,7 @@
   ],
   "containerEnv": {
     "PIP_ROOT_USER_ACTION": "ignore",
-    "PYTHONPATH": "/workspaces/cloud-sec-architect-8b"
+    "PYTHONPATH": "/workspaces/CloudSec-Arch-8b"
   },
   "customizations": {
     "vscode": {

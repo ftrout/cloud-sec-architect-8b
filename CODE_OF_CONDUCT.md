@@ -38,7 +38,7 @@ This Code of Conduct applies to all project spaces, including:
 
 ### Security Considerations
 
-When using cloud-sec-architect-8b:
+When using CloudSec-Arch-8b:
 
 1. **Verify all recommendations** against official vendor documentation
 2. **Do not use** for generating exploit code or attack methodologies
@@ -73,4 +73,4 @@ This Code of Conduct is adapted from the [Contributor Covenant](https://www.cont
 
 ## Contact
 
-For questions about this Code of Conduct, please open an issue on the [GitHub repository](https://github.com/ftrout/cloud-sec-architect-8b).
+For questions about this Code of Conduct, please open an issue on the [GitHub repository](https://github.com/ftrout/CloudSec-Arch-8b).

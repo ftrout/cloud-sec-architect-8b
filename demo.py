@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Gradio Demo for cloud-sec-architect-8b
+Gradio Demo for CloudSec-Arch-8b
 
 A simple web interface for testing the Cloud Security Architect model.
 Supports both local adapter paths and HuggingFace Hub models.
@@ -8,7 +8,7 @@ Supports both local adapter paths and HuggingFace Hub models.
 Usage:
     python demo.py                           # Use default local path
     python demo.py --adapter-path ./my-model # Custom local path
-    python demo.py --hf-model fmt0816/cloud-sec-architect-8b  # HuggingFace Hub
+    python demo.py --hf-model fmt0816/CloudSec-Arch-8b  # HuggingFace Hub
 """
 
 import argparse
@@ -28,7 +28,7 @@ from transformers import (
 
 # Default configuration
 DEFAULT_BASE_MODEL = "meta-llama/Meta-Llama-3.1-8B-Instruct"
-DEFAULT_ADAPTER_PATH = "./cloud-sec-architect-8b"
+DEFAULT_ADAPTER_PATH = "./CloudSec-Arch-8b"
 SYSTEM_PROMPT = """You are a Senior Cloud Security Architect. Provide detailed, secure, and compliant technical guidance. Your expertise includes:
 - Multi-cloud security architecture (AWS, Azure, GCP)
 - Compliance frameworks (NIST 800-53, CIS Benchmarks, ISO 27001)
@@ -152,7 +152,7 @@ def create_demo(model, tokenizer) -> gr.Blocks:
             """
             # Cloud Security Architect AI
 
-            **cloud-sec-architect-8b** - A specialized LLM fine-tuned for cloud security architecture guidance.
+            **CloudSec-Arch-8b** - A specialized LLM fine-tuned for cloud security architecture guidance.
 
             This model provides expert-level advice on:
             - Multi-cloud security architecture (AWS, Azure, GCP)
@@ -268,7 +268,7 @@ def create_demo(model, tokenizer) -> gr.Blocks:
 def main():
     """Main entry point."""
     parser = argparse.ArgumentParser(
-        description="Gradio Demo for cloud-sec-architect-8b",
+        description="Gradio Demo for CloudSec-Arch-8b",
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument(
@@ -318,7 +318,7 @@ def main():
         print("\nOptions:")
         print("  1. Train the model first: python train.py")
         print("  2. Specify a different path: python demo.py --adapter-path /path/to/adapter")
-        print("  3. Use HuggingFace Hub: python demo.py --hf-model fmt0816/cloud-sec-architect-8b")
+        print("  3. Use HuggingFace Hub: python demo.py --hf-model fmt0816/CloudSec-Arch-8b")
         return 1
 
     # Load model

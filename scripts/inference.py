@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """
-Inference script for cloud-sec-architect-8b.
+Inference script for CloudSec-Arch-8b.
 
 Simple command-line interface for testing the model.
 
 Usage:
     python scripts/inference.py "What are the key security considerations for AWS Lambda?"
     python scripts/inference.py --interactive
-    python scripts/inference.py --hf-model fmt0816/cloud-sec-architect-8b "Your question"
+    python scripts/inference.py --hf-model fmt0816/CloudSec-Arch-8b "Your question"
 """
 
 import argparse
@@ -20,7 +20,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 
 # Default configuration
 DEFAULT_BASE_MODEL = "meta-llama/Meta-Llama-3.1-8B-Instruct"
-DEFAULT_ADAPTER_PATH = "./cloud-sec-architect-8b"
+DEFAULT_ADAPTER_PATH = "./CloudSec-Arch-8b"
 SYSTEM_PROMPT = """You are a Senior Cloud Security Architect. Provide detailed, secure, and compliant technical guidance. Your expertise includes:
 - Multi-cloud security architecture (AWS, Azure, GCP)
 - Compliance frameworks (NIST 800-53, CIS Benchmarks, ISO 27001)
@@ -31,7 +31,7 @@ SYSTEM_PROMPT = """You are a Senior Cloud Security Architect. Provide detailed, 
 
 
 class CloudSecurityArchitect:
-    """Wrapper for cloud-sec-architect-8b model."""
+    """Wrapper for CloudSec-Arch-8b model."""
 
     def __init__(
         self,
@@ -152,7 +152,7 @@ def interactive_mode(model: CloudSecurityArchitect, args):
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Inference for cloud-sec-architect-8b",
+        description="Inference for CloudSec-Arch-8b",
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
 
@@ -220,7 +220,7 @@ def main():
         print("\nOptions:")
         print("  1. Train the model first: python train.py")
         print("  2. Specify a different path: --adapter-path /path/to/adapter")
-        print("  3. Use HuggingFace Hub: --hf-model fmt0816/cloud-sec-architect-8b")
+        print("  3. Use HuggingFace Hub: --hf-model fmt0816/CloudSec-Arch-8b")
         return 1
 
     # Load model

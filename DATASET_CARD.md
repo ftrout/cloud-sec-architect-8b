@@ -185,4 +185,4 @@ This dataset is licensed under the MIT License. Note that the source documentati
 
 ### Contact
 
-For questions or issues, please open an issue on the [GitHub repository](https://github.com/ftrout/cloud-sec-architect-8b).
+For questions or issues, please open an issue on the [GitHub repository](https://github.com/ftrout/CloudSec-Arch-8b).

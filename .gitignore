@@ -226,7 +226,7 @@ mlruns/
 *.pt
 *.pth
 cloud-architect-v*/
-cloud-sec-architect-8b/
-cloud-sec-architect-8b-merged/
+CloudSec-Arch-8b/
+CloudSec-Arch-8b-merged/
 harvester.log
 checkpoint.json

@@ -1,8 +1,8 @@
-# cloud-sec-architect-8b
+# CloudSec-Arch-8b
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
-[![Hugging Face](https://img.shields.io/badge/Hugging%20Face-Model-orange)](https://huggingface.co/fmt0816/cloud-sec-architect-8b)
+[![Hugging Face](https://img.shields.io/badge/Hugging%20Face-Model-orange)](https://huggingface.co/fmt0816/CloudSec-Arch-8b)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 A specialized fine-tuned LLM designed to function as a **Senior Cloud Security Architect**. Built on Meta's Llama 3.1 8B Instruct, this model provides expert-level guidance on multi-cloud security architecture, compliance frameworks, and infrastructure-as-code security.
@@ -24,8 +24,8 @@ A specialized fine-tuned LLM designed to function as a **Senior Cloud Security A
 ### Installation
 
 ```bash
-git clone https://github.com/ftrout/cloud-sec-architect-8b.git
-cd cloud-sec-architect-8b
+git clone https://github.com/ftrout/CloudSec-Arch-8b.git
+cd CloudSec-Arch-8b
 pip install -r requirements.txt
 ```
 
@@ -60,7 +60,7 @@ model = AutoModelForCausalLM.from_pretrained(
 )
 
 # Load fine-tuned adapter
-model = PeftModel.from_pretrained(model, "fmt0816/cloud-sec-architect-8b")
+model = PeftModel.from_pretrained(model, "fmt0816/CloudSec-Arch-8b")
 
 tokenizer = AutoTokenizer.from_pretrained("meta-llama/Meta-Llama-3.1-8B-Instruct")
 ```
@@ -109,7 +109,7 @@ python train.py
 
 * **Base Model:** `meta-llama/Meta-Llama-3.1-8B-Instruct`
 * **Technique:** 4-bit Quantization + LoRA (Rank 32)
-* **Output:** `./cloud-sec-architect-8b` (The trained adapter weights)
+* **Output:** `./CloudSec-Arch-8b` (The trained adapter weights)
 * **Training Time:** ~2-4 hours on a single RTX 3090
 
 ### Step 3: Evaluation (`evaluate.py`)
@@ -125,7 +125,7 @@ python evaluate.py
 ## Project Structure
 
 ```text
-cloud-sec-architect-8b/
+CloudSec-Arch-8b/
 ├── config/                     # Configuration files
 │   └── training_config.yaml
 ├── data/                       # Generated datasets
@@ -133,7 +133,7 @@ cloud-sec-architect-8b/
 ├── scripts/                    # Utility scripts
 │   ├── inference.py            # CLI inference
 │   └── upload_to_hub.py        # HuggingFace upload
-├── cloud-sec-architect-8b/     # Saved LoRA Adapters
+├── CloudSec-Arch-8b/           # Saved LoRA Adapters
 │   ├── adapter_config.json
 │   └── adapter_model.safetensors
 ├── results/                    # Training checkpoints
@@ -175,10 +175,10 @@ After training, upload your model to Hugging Face Hub:
 
 ```bash
 # Upload LoRA adapter (recommended - smaller size)
-python scripts/upload_to_hub.py --repo-id fmt0816/cloud-sec-architect-8b
+python scripts/upload_to_hub.py --repo-id fmt0816/CloudSec-Arch-8b
 
 # Upload merged full model (larger but easier to use)
-python scripts/upload_to_hub.py --repo-id fmt0816/cloud-sec-architect-8b-merged --merge
+python scripts/upload_to_hub.py --repo-id fmt0816/CloudSec-Arch-8b-merged --merge
 ```
 
 ---
@@ -218,12 +218,12 @@ This tool is for educational and research purposes. While trained on authoritati
 ## Citation
 
 ```bibtex
-@misc{cloud-sec-architect-8b,
+@misc{CloudSec-Arch-8b,
   author = {Trout, Frank},
-  title = {cloud-sec-architect-8b: A Fine-tuned LLM for Cloud Security Architecture},
+  title = {CloudSec-Arch-8b: A Fine-tuned LLM for Cloud Security Architecture},
   year = {2025},
   publisher = {Hugging Face},
-  howpublished = {\url{https://huggingface.co/fmt0816/cloud-sec-architect-8b}}
+  howpublished = {\url{https://huggingface.co/fmt0816/CloudSec-Arch-8b}}
 }
 ```
 

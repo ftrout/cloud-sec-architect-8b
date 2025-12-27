@@ -26,7 +26,7 @@ tags:
 pipeline_tag: text-generation
 base_model: meta-llama/Meta-Llama-3.1-8B-Instruct
 model-index:
-  - name: cloud-sec-architect-8b
+  - name: CloudSec-Arch-8b
     results: []
 datasets:
   - custom
@@ -49,7 +49,7 @@ inference:
     do_sample: true
 ---
 
-# cloud-sec-architect-8b
+# CloudSec-Arch-8b
 
 A specialized fine-tuned LLM designed to function as a **Senior Cloud Security Architect**. Built on Meta's Llama 3.1 8B Instruct, this model provides expert-level guidance on multi-cloud security architecture, compliance frameworks, and infrastructure-as-code security.
 
@@ -57,7 +57,7 @@ A specialized fine-tuned LLM designed to function as a **Senior Cloud Security A
 
 ### Model Description
 
-**cloud-sec-architect-8b** is a domain-specific fine-tuned model trained on high-fidelity, vendor-agnostic documentation covering cloud security architecture, threat frameworks, and infrastructure-as-code standards. Unlike generic LLMs, this model excels at:
+**CloudSec-Arch-8b** is a domain-specific fine-tuned model trained on high-fidelity, vendor-agnostic documentation covering cloud security architecture, threat frameworks, and infrastructure-as-code standards. Unlike generic LLMs, this model excels at:
 
 - Designing secure multi-cloud environments (AWS, Azure, GCP)
 - Performing security gap analysis
@@ -72,7 +72,7 @@ A specialized fine-tuned LLM designed to function as a **Senior Cloud Security A
 
 ### Model Sources
 
-- **Repository:** [GitHub - cloud-sec-architect-8b](https://github.com/ftrout/cloud-sec-architect-8b)
+- **Repository:** [GitHub - CloudSec-Arch-8b](https://github.com/ftrout/CloudSec-Arch-8b)
 - **Base Model:** [meta-llama/Meta-Llama-3.1-8B-Instruct](https://huggingface.co/meta-llama/Meta-Llama-3.1-8B-Instruct)
 
 ## Uses
@@ -139,7 +139,7 @@ from peft import PeftModel
 
 # Configuration
 base_model_id = "meta-llama/Meta-Llama-3.1-8B-Instruct"
-adapter_path = "fmt0816/cloud-sec-architect-8b"  # or local path
+adapter_path = "fmt0816/CloudSec-Arch-8b"  # or local path
 
 # Load with 4-bit quantization
 bnb_config = BitsAndBytesConfig(
@@ -288,12 +288,12 @@ The use of QLoRA (4-bit quantization) significantly reduces the computational an
 ## Citation
 
 ```bibtex
-@misc{cloud-sec-architect-8b,
+@misc{CloudSec-Arch-8b,
   author = {Trout, Frank},
-  title = {cloud-sec-architect-8b: A Fine-tuned LLM for Cloud Security Architecture},
+  title = {CloudSec-Arch-8b: A Fine-tuned LLM for Cloud Security Architecture},
   year = {2025},
   publisher = {Hugging Face},
-  howpublished = {\url{https://huggingface.co/fmt0816/cloud-sec-architect-8b}}
+  howpublished = {\url{https://huggingface.co/fmt0816/CloudSec-Arch-8b}}
 }
 ```
 
@@ -303,4 +303,4 @@ Frank Trout
 
 ## Model Card Contact
 
-For questions or issues, please open an issue on the [GitHub repository](https://github.com/ftrout/cloud-sec-architect-8b).
+For questions or issues, please open an issue on the [GitHub repository](https://github.com/ftrout/CloudSec-Arch-8b).

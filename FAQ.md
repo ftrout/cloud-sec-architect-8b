@@ -2,9 +2,9 @@
 
 ## General Questions
 
-### What is cloud-sec-architect-8b?
+### What is CloudSec-Arch-8b?
 
-cloud-sec-architect-8b is a specialized fine-tuned large language model designed to function as a Senior Cloud Security Architect. It provides expert-level guidance on multi-cloud security architecture, compliance frameworks, and infrastructure-as-code security.
+CloudSec-Arch-8b is a specialized fine-tuned large language model designed to function as a Senior Cloud Security Architect. It provides expert-level guidance on multi-cloud security architecture, compliance frameworks, and infrastructure-as-code security.
 
 ### What base model is it built on?
 
@@ -74,7 +74,7 @@ model = AutoModelForCausalLM.from_pretrained(
 )
 
 # Load fine-tuned adapter
-model = PeftModel.from_pretrained(model, "fmt0816/cloud-sec-architect-8b")
+model = PeftModel.from_pretrained(model, "fmt0816/CloudSec-Arch-8b")
 tokenizer = AutoTokenizer.from_pretrained("meta-llama/Meta-Llama-3.1-8B-Instruct")
 ```
 
@@ -95,7 +95,7 @@ python demo.py
 python demo.py --port 8080
 
 # Using HuggingFace Hub model
-python demo.py --hf-model fmt0816/cloud-sec-architect-8b
+python demo.py --hf-model fmt0816/CloudSec-Arch-8b
 ```
 
 The demo will be available at `http://127.0.0.1:7860` by default.
@@ -203,7 +203,7 @@ Adjust generation parameters:
 
 Ensure you've either:
 1. Trained the model locally (`python train.py`)
-2. Specified the correct HuggingFace Hub model (`--hf-model fmt0816/cloud-sec-architect-8b`)
+2. Specified the correct HuggingFace Hub model (`--hf-model fmt0816/CloudSec-Arch-8b`)
 
 ### Import errors with bitsandbytes
 
@@ -276,7 +276,7 @@ from langchain_huggingface import HuggingFacePipeline
 
 ### Where can I get support?
 
-- Open an issue on [GitHub](https://github.com/ftrout/cloud-sec-architect-8b)
+- Open an issue on [GitHub](https://github.com/ftrout/CloudSec-Arch-8b)
 - Check existing issues for similar problems
 - Review the documentation in this repository
 
